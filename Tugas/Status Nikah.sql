@@ -22,16 +22,33 @@ VALUES
 (null, "Nia", "Wanita", "Nikah"), 
 (null, "Tini", "Wanita", "Cerai");		
 
-SELECT nama, kelamin, status, CASE
-WHEN kelamin = "Pria" AND status = "Sendiri" THEN "Perjaka"
-WHEN kelamin = "Pria" AND status = "Nikah" THEN "Kawin"
-WHEN kelamin = "Pria" AND status = "Cerai" THEN "Duda"
-WHEN kelamin = "Wanita" AND status = "Sendiri" THEN "Perawan"
-WHEN kelamin = "Wanita" AND status = "Nikah" THEN "Kawin"
-WHEN kelamin = "Wanita" AND status = "Cerai" THEN "Janda"
-ELSE ""
-END AS keterangan
+CREATE VIEW vs_keterangan AS
+SELECT nama, kelamin, status,
+if(kelamin = 'Pria', 
+	if(status = 'Sendiri',  'Perjaka',
+		if(status = 'Nikah', 'Kawin', 'Duda') 
+	),
+	if(status = 'Sendiri', 'Perawan', 
+		if(status = 'Nikah', 'Kawin', 'Janda')
+    )
+) AS keteranganIF,
+
+CASE
+WHEN kelamin = "Pria" THEN 
+	if(status = 'Sendiri',  'Perjaka',
+		if(status = 'Nikah', 'Kawin', 'Duda') 
+	)
+WHEN kelamin = "Wanita" THEN 
+	if(status = 'Sendiri', 'Perawan', 
+		if(status = 'Nikah', 'Kawin', 'Janda')
+    )
+END AS keteranganCASE
 FROM status_nikah;
+
+SELECT keteranganIF, count(keteranganIF) AS Jumlah
+FROM vs_keterangan
+WHERE keteranganIF = 'Kawin'
+GROUP BY keteranganIF;
 
 /*
 DESCRIBE status_nikah;
