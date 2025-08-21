@@ -34,7 +34,9 @@ CREATE TABLE agama (
 	kode char(1) primary key,
     nm_agama varchar(9)
 );
+
 SHOW CREATE TABLE agama;
+-- Procedure insert agama
 delimiter //
 CREATE PROCEDURE ins_agama(pkode char(1), pnama varchar(9))
 begin
@@ -48,6 +50,7 @@ call ins_agama('4', 'Budha');
 call ins_agama('5', 'Hindu');
 call ins_agama('6', 'Konghucu');
 
+-- Procedure update agama
 delimiter //
 CREATE PROCEDURE upd_agama(paid char(1), pnama varchar(50))
 begin
@@ -59,6 +62,18 @@ delimiter ;
 call upd_agama('1', 'Damayanti');
 call upd_agama('1', 'Mohamad Naufal Dzakiy');
 call upd_agama('1', 'Mohamad Tsaniy Atila Dzaka');
+
+-- Procedure insert anggota pns
+delimiter //
+CREATE PROCEDURE ins_anggota_pns(knip VARCHAR(18), knama VARCHAR(50), kagama_id char(1))
+BEGIN
+	INSERT anggota_pns (nip, nama, agama_id) VALUES (knip, knama, kagama_id);
+END //
+delimiter ;
+CALL ins_anggota_pns('200011152021112005', 'Dimas Nuryadin', '1');
+CALL ins_anggota_pns('200011162021112006', 'Oms Situasi', '2');
+CALL ins_anggota_pns('200011172021112007', 'Wow Kemana', '3');
+CALL ins_anggota_pns('200011182021112008', 'Dari Mila', '4');
 
 
 ALTER TABLE anggota_pns
@@ -76,8 +91,11 @@ FROM info_pns;
 SELECT *
 FROM anggota_pns;
 
+/* Relasi database */
 SELECT nama, nm_agama FROM agama
 INNER JOIN anggota_pns ON anggota_pns.agama_id=kode;
+
+SHOW PROCEDURE STATUS WHERE Db = 'pns';
 
 /*
 DESCRIBE anggota_pns;
